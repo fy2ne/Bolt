@@ -1,17 +1,18 @@
 /*
   Bolt — Discord AI bot entrypoint
-  - Reads TOKEN, CHANNEL_ID, and GEMINI_API_TOKEN from .env
+  - Reads TOKEN, CHANNEL_ID, and OPENAI_API_KEY from .env
   - Only responds to messages in CHANNEL_ID
   - Ignores messages from other channels and from bots
-  - Uses Gemini API via src/geminiClient.js to generate replies
+  - Uses OpenAI via src/openaiClient.js to generate replies
 */
 
 require('dotenv').config();
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
-const { sendPrompt } = require('./geminiClient');
+const { sendPrompt } = require('./openaiClient');
 
 const DISCORD_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const ALLOWED_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID; // only respond in this channel
+const OPENAI_KEY = process.env.OPENAI_API_KEY;
 
 if (!DISCORD_TOKEN) {
   console.error('Missing DISCORD_BOT_TOKEN in .env');
@@ -19,6 +20,10 @@ if (!DISCORD_TOKEN) {
 }
 if (!ALLOWED_CHANNEL_ID) {
   console.error('Missing DISCORD_CHANNEL_ID in .env');
+  process.exit(1);
+}
+if (!OPENAI_KEY) {
+  console.error('Missing OPENAI_API_KEY in .env');
   process.exit(1);
 }
 
@@ -56,15 +61,15 @@ client.on('messageCreate', async (message) => {
     // Show typing indicator while we generate
     try { await message.channel.sendTyping(); } catch (e) { /* ignore sendTyping errors */ }
 
-    // Build a prompt for Gemini — keep it simple. You can expand system instructions as needed.
+    // Build a prompt for the model — keep it simple. You can expand system instructions as needed.
     const prompt = `You are Bolt, a helpful, concise, and polite assistant in a Discord channel. User said: ${content}`;
 
-    // Call Gemini client
+    // Call OpenAI client
     let aiReply;
     try {
       aiReply = await sendPrompt(prompt, { maxTokens: 400 });
     } catch (apiErr) {
-      console.error('Error from Gemini API:', apiErr.message || apiErr);
+      console.error('Error from OpenAI API:', apiErr.message || apiErr);
       // Reply with a gentle error message so users know something went wrong
       await message.reply('Sorry, I had trouble generating a response right now. Please try again later.');
       return;
