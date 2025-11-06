@@ -21,7 +21,7 @@
 "url": "https://github.com/Quited-devs/Bolt.git"
 }
   
-  "author": "Quited-devs",
+  "author": "fy2ne",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.5.0",
@@ -29,4 +29,5 @@
     "dotenv": "^16.0.3"
   }
 }
+
 
