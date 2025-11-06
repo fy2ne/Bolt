@@ -1,6 +1,6 @@
 # Bolt — Discord AI Bot (Gemini)
 
-Made by Quited_devs — https://github.com/Quited-devs/Bolt
+Made by fy2ne — https://github.com/fy2ne/Bolt
 
 Bolt is a lightweight Discord bot that uses the Gemini API to generate AI-powered replies in a single specified channel.
 
@@ -97,3 +97,4 @@ Then, send a message in the configured channel. Bolt will respond using the Gemi
 ## License
 
 This project is released under the MIT License. See the `LICENSE` file.
+
